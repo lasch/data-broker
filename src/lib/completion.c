@@ -25,6 +25,54 @@
 #include <sys/time.h>
 #include <errno.h>
 
+DBR_Errorcode_t dbrMapErrno_to_errorcode( const int rc )
+{
+  switch( rc )
+  {
+    case 0:
+      return DBR_SUCCESS;
+    case EINVAL:
+    case EMSGSIZE:
+      return DBR_ERR_INVALID;
+    case ETIMEDOUT:
+      return DBR_ERR_TIMEOUT;
+    case ENODATA:
+    case ENOENT:
+      return DBR_ERR_UNAVAIL;
+    case EEXIST:
+      return DBR_ERR_EXISTS;
+    case ENOMEM:
+      return DBR_ERR_NOMEMORY;
+    case EBADF:
+      return DBR_ERR_NOFILE;
+    case EPERM:
+      return DBR_ERR_NOAUTH;
+    case ENOTCONN:
+      return DBR_ERR_NOCONNECT;
+    case ENOTSUP:
+    case ENOSYS:
+      return DBR_ERR_NOTIMPL;
+    case EBADMSG:
+      return DBR_ERR_INVALIDOP;
+    case ENOMSG:
+      return DBR_ERR_BE_POST;
+    case EPROTO:
+      return DBR_ERR_BE_PROTO;
+    default:
+      break;
+//      DBR_ERR_HANDLE,  /**< An invalid handle was encountered*/
+//      DBR_ERR_INPROGRESS, /**< A request is still in progress, check again later*/
+//      DBR_ERR_UBUFFER, /**< Provided user buffer problem (too small, not available)*/
+//      DBR_ERR_NSBUSY, /**< There are still clients attached to a namespace*/
+//      DBR_ERR_NSINVAL, /**< Invalid name space*/
+//      DBR_ERR_TAGERROR, /**< The returned tag is an error*/
+//      DBR_ERR_CANCELLED, /**< Operation was cancelled*/
+//      DBR_ERR_GENERIC, /**< A general or unknown error has occurred*/
+  }
+  return DBR_ERR_BE_GENERAL;
+}
+
+
 DBR_Errorcode_t dbrCheck_response( dbrRequestContext_t *rctx )
 {
   if( rctx == NULL )
@@ -36,8 +84,10 @@ DBR_Errorcode_t dbrCheck_response( dbrRequestContext_t *rctx )
   int64_t rsize = dbrSGE_extract_size( req );
   DBR_Errorcode_t rc = DBR_SUCCESS;
 
+// todo: we can do better error reporting here....
+  // the status mostly contains a very generic error with _rc carrying the actual error code (-errno) from the backend)
   if(( req->_opcode != DBBE_OPCODE_READ )&&( cpl->_rc < 0 ))
-    return cpl->_status;
+    return dbrMapErrno_to_errorcode( -cpl->_status );
 
   switch( req->_opcode )
   {

@@ -59,6 +59,7 @@ typedef enum {
   DBR_ERR_NOTIMPL, /**< Operation not implemented*/
   DBR_ERR_INVALIDOP, /**< Invalid operation*/
   DBR_ERR_BE_POST, /**< Posting request to back-end failed*/
+  DBR_ERR_BE_PROTO, /**< A protocol error in the back-end was detected */
   DBR_ERR_BE_GENERAL, /**< Unspecified back-end error*/
   DBR_ERR_MAXERROR
 } DBR_Errorcode_t;
@@ -72,7 +73,7 @@ char *dbrError_table[ DBR_ERR_MAXERROR ] = {
    [ DBR_SUCCESS ] = "Operation successful",
    [ DBR_ERR_GENERIC ] = "A general or unknown error has occurred",
    [ DBR_ERR_INVALID ] = "Invalid argument",
-   [ DBR_ERR_HANDLE ] = "An invalid handle was encountered inside",
+   [ DBR_ERR_HANDLE ] = "An invalid handle was encountered",
    [ DBR_ERR_INPROGRESS ] = "Operation in progress",
    [ DBR_ERR_TIMEOUT ] = "Operation timed out",
    [ DBR_ERR_UBUFFER ] = "Provided user buffer problem (too small, not available)",
@@ -89,6 +90,7 @@ char *dbrError_table[ DBR_ERR_MAXERROR ] = {
    [ DBR_ERR_NOTIMPL ] = "Operation not implemented",
    [ DBR_ERR_INVALIDOP ] = "Invalid operation",
    [ DBR_ERR_BE_POST ] = "Failed to post request to back-end",
+   [ DBR_ERR_BE_PROTO ] = "A protocol error in the back-end was detected",
    [ DBR_ERR_BE_GENERAL ] = "Unspecified back-end error"
 };
 
