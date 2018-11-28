@@ -326,6 +326,9 @@ int dbBE_Redis_connection_send( dbBE_Redis_connection_t *conn )
   if( ! dbBE_Redis_connection_RTS( conn ) )
     return -ENOTCONN;
 
+  if( dbBE_Redis_sr_buffer_available( conn->_sendbuf ) > INTMAX_MAX )
+    return -EMSGSIZE;
+
 #ifdef DEBUG_REDIS_PROTOCOL
   if( dbBE_Redis_sr_buffer_available( conn->_sendbuf ) > 1000 )
   {
