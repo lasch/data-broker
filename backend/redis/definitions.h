@@ -47,9 +47,14 @@
 
 
 /*
+ * connection index type definition
+ */
+typedef uint16_t dbBE_Redis_connection_index_t;
+
+/*
  * max number of Redis connections that can be handled simultaneously by the library
  */
-#define DBBE_REDIS_MAX_CONNECTIONS ( (unsigned)256 )
+#define DBBE_REDIS_MAX_CONNECTIONS ( (dbBE_Redis_connection_index_t)1024 )
 
 
 /*
